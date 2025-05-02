@@ -69,7 +69,7 @@ public class Grid : MonoBehaviour
         int x = cell.x - origin.x;
         int y = cell.y - origin.y;
 
-        Debug.Log("Convert" + grids[x,y].GridX + grids[x, y].GridX);
+     
         return grids[x,y];
 
     }
@@ -96,7 +96,7 @@ public class Grid : MonoBehaviour
 
             }
         }
-        Debug.Log("Neighbor " + neighbors.Count);
+     
         return neighbors;
 
     }
@@ -108,8 +108,8 @@ public class Grid : MonoBehaviour
             Node playerNode = CellFromWorld(ends.position);
             Node targetNode = CellFromWorld(start.position);
 
-            Debug.Log("PlayerNode Pos: " + playerNode.WorldPosition);
-            Debug.Log("TargetNode Pos: " + targetNode.WorldPosition);
+           /* Debug.Log("PlayerNode Pos: " + playerNode.WorldPosition);
+            Debug.Log("TargetNode Pos: " + targetNode.WorldPosition);*/
 
             foreach (Node node in grids)
             {
