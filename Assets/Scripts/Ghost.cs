@@ -26,6 +26,7 @@ public class Ghost : MonoBehaviour
     [SerializeField] bool isPhasing = false;
     [SerializeField] float phaseDuration = 5f;
     [SerializeField] float phaseCooldown = 20f;
+    private AudioSource audioSource;
     public enum GhostState
     {
         Wandering,Seeking,Fleeing
@@ -41,7 +42,7 @@ public class Ghost : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -61,6 +62,7 @@ public class Ghost : MonoBehaviour
                 case GhostState.Seeking:
                     GetPath(currentPos.position, targetPos.position);
                     StartMoving(finalPath);
+                    audioSource.Play();
                     break;
                 case GhostState.Fleeing:
                     GetPath(currentPos.position, latestPoint.position);
