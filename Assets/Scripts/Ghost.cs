@@ -21,8 +21,6 @@ public class Ghost : MonoBehaviour
     [SerializeField] bool isMoving = false;
     private Coroutine moveCoroutine;
 
-
-
     [SerializeField] bool isPhasing = false;
     [SerializeField] float phaseDuration = 5f;
     [SerializeField] float phaseCooldown = 20f;

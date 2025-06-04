@@ -13,8 +13,11 @@ public class Player : MonoBehaviour
     float protectionTime= 4f;
     float protectionCooldown = 15f;
     public Grid gridRef;
-    public Image skill;
+    //public Image skill;
     public GameObject shieldVFX;
+    public float faceDir = 0;
+
+    public FacingDirection.Direction facingDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +26,7 @@ public class Player : MonoBehaviour
         transform.position = start.WorldPosition; 
         movePoint.parent = null;
         protectionCooldown= 5f;
-        skill.color = new Color(152f / 255f, 152f / 255f, 152f / 255f, 128f / 255f);
+        //skill.color = new Color(152f / 255f, 152f / 255f, 152f / 255f, 128f / 255f);
     }
 
     // Update is called once per frame
@@ -36,13 +39,15 @@ public class Player : MonoBehaviour
             float y = Input.GetAxisRaw("Vertical");
             if (Mathf.Abs(x) == 1f)
             {
+                facingDirection = (x > 0f) ? FacingDirection.Direction.Right : FacingDirection.Direction.Left;
                 if (!Physics2D.OverlapCircle((movePoint.position + new Vector3(x, 0f, 0f)), 0.2f, obstacleLayer))
                 {
                     movePoint.position += new Vector3(x, 0f, 0f);
                 }
             }
-            else
+            else if(Mathf.Abs(y) == 1f)
             {
+                facingDirection = (y > 0f) ? FacingDirection.Direction.Up : FacingDirection.Direction.Down;
                 if (!Physics2D.OverlapCircle((movePoint.position + new Vector3(0f, y, 0f)), 0.2f, obstacleLayer))
                 {
                     movePoint.position += new Vector3(0, y, 0f);
@@ -50,23 +55,23 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(!isProtected && protectionCooldown >= 0f)
+      /*  if(!isProtected && protectionCooldown >= 0f)
         {
             protectionCooldown -= Time.deltaTime;
             if(protectionCooldown <= 0f)
             {
                 skill.color = new Color(255f / 255f, 230f / 255f, 230f / 255f, 255f / 255f);
             }
-        }
+        }*/
 
-        if(Input.GetMouseButtonDown(0) && protectionCooldown <= 0f) {
+        /*if(Input.GetMouseButtonDown(0) && protectionCooldown <= 0f) {
             StartCoroutine(Protection());
-        }
+        }*/
 
       
     }
 
-    private IEnumerator Protection()
+    /*private IEnumerator Protection()
     {
         isProtected= true;
         shieldVFX.SetActive(true);
@@ -75,7 +80,7 @@ public class Player : MonoBehaviour
         isProtected= false;
         shieldVFX.SetActive(false);
         protectionCooldown = 15f;
-    }
+    }*/
 
 
 
