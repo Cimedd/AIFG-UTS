@@ -515,6 +515,7 @@ MonoBehaviour:
   isFrozen: 0
   seePlayer: 0
   targetInRange: 0
+  isDormant: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 64
@@ -581,7 +582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979459647060585150, guid: da1694b595c31bb45a5c1fdc30db08c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.52
+      value: 4.67
       objectReference: {fileID: 0}
     - target: {fileID: 1979459647060585150, guid: da1694b595c31bb45a5c1fdc30db08c7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -726,6 +727,10 @@ PrefabInstance:
       value: GAME UI
       objectReference: {fileID: 0}
     - target: {fileID: 7429040622461160249, guid: ea9472704018de747997611e671c1f43, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7429040622807369122, guid: ea9472704018de747997611e671c1f43, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

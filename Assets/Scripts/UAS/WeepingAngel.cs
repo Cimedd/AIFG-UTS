@@ -12,6 +12,7 @@ public class WeepingAngel : MonoBehaviour
     public bool isFrozen = false;
     public bool seePlayer = false;
     public bool targetInRange = false;
+    public bool isDormant = false;
     public LayerMask targetMask;
 
 
