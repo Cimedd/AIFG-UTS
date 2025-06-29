@@ -108,12 +108,8 @@ public class Grid : MonoBehaviour
             Node playerNode = CellFromWorld(ends.position);
             Node targetNode = CellFromWorld(start.position);
 
-           /* Debug.Log("PlayerNode Pos: " + playerNode.WorldPosition);
-            Debug.Log("TargetNode Pos: " + targetNode.WorldPosition);*/
-
             foreach (Node node in grids)
             {
-                
                 Gizmos.color = !node.IsWall ? Color.green : Color.red;
               
                 if (finalPath != null)

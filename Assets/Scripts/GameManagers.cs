@@ -9,6 +9,7 @@ public class GameManagers : MonoBehaviour
     public static GameManagers Instance;
     public int ghostSoul = 3;
     public GameObject panel;
+
     public TMP_Text soulText, message;
     bool isPlaying = false;
     private void Awake()
