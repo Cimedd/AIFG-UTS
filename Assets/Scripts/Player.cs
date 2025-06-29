@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     public float faceDir = 0;
     public bool stage1 = true;
     public FacingDirection.Direction facingDirection;
+    public Sprite[] sprites;
+    public SpriteRenderer spriteRend;
     
     public bool isProtected = false;
     public GameObject shieldVFX;
@@ -26,11 +28,12 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        spriteRend= GetComponent<SpriteRenderer>();
         Node start = gridRef.CellFromWorld(transform.position);
         transform.position = start.WorldPosition; 
         movePoint.parent = null;
         protectionCooldown= 5f;
-        dummyCooldown = 5f;
+        dummyCooldown = 0f;
         skill.color = new Color(152f / 255f, 152f / 255f, 152f / 255f, 128f / 255f);
     }
 
@@ -45,6 +48,7 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(x) == 1f)
             {
                 facingDirection = (x > 0f) ? FacingDirection.Direction.Right : FacingDirection.Direction.Left;
+                spriteRend.sprite = (x > 0f) ? sprites[3] : sprites[2];
                 if (!Physics2D.OverlapCircle((movePoint.position + new Vector3(x, 0f, 0f)), 0.3f, obstacleLayer))
                 {
                     movePoint.position += new Vector3(x, 0f, 0f);
@@ -53,6 +57,7 @@ public class Player : MonoBehaviour
             else if(Mathf.Abs(y) == 1f)
             {
                 facingDirection = (y > 0f) ? FacingDirection.Direction.Up : FacingDirection.Direction.Down;
+                spriteRend.sprite = (y> 0f) ? sprites[0] : sprites[1];
                 if (!Physics2D.OverlapCircle((movePoint.position + new Vector3(0f, y, 0f)), 0.3f, obstacleLayer))
                 {
                     movePoint.position += new Vector3(0, y, 0f);
@@ -89,10 +94,7 @@ public class Player : MonoBehaviour
             {
                 SpawnDummy();
             }
-         
         }
-
-
     }
 
     private IEnumerator Protection()

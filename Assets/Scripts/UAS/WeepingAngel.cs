@@ -15,6 +15,8 @@ public class WeepingAngel : MonoBehaviour
     public bool targetInRange = false;
     public bool isDormant = false;
     public LayerMask targetMask;
+    public float targetCooldownDuration = 1.5f; 
+    public float targetCooldownTimer = 0f;
     public bool isTest = false;
 
 
@@ -28,6 +30,7 @@ public class WeepingAngel : MonoBehaviour
     private Coroutine moveCoroutine, sensorRoutine;
     public FacingDirection.Direction facingDirection;
     [SerializeField]private Vector2 facingSensor = Vector2.up;
+
 
     public float radius;
     [Range(0, 360)] public float angle;
@@ -67,24 +70,16 @@ public class WeepingAngel : MonoBehaviour
     
     void Update()
     {
+        if (targetCooldownTimer > 0f)
+            targetCooldownTimer -= Time.deltaTime;
+
         UpdateFacingSensor();
         currentState.Update();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if(isFrozen)
-            {
-                Debug.Log("Angel Dead");
-            }
-            else
-            {
-                Debug.Log("Player Killed");
-            }
-           
-        }
+        currentState.Collision(collision);
     }
 
     public void ChangeState(EnemyState newState)
@@ -106,65 +101,52 @@ public class WeepingAngel : MonoBehaviour
 
     private void SensorCheck()
     {
-        /* Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, targetMask);
-
-         foreach(Collider2D hit in hits)
-         {
-             if (hit == null) continue;
-
-             Transform target = hit.transform;
-
-             if (hit.CompareTag("dummy"))
-             {    
-                 if (targetPos == null || !targetPos.CompareTag("dummy"))
-                 {
-                     StopMoving(); 
-                     targetPos = target;
-                     return;
-                 }
-             }
-
-             if (targetPos == null)
-             {
-                 targetPos = target;      
-             }
-         }
-
-         if (targetPos != null)
-         {
-             Vector2 dirToTarget = (targetPos.position - transform.position).normalized;
-
-             if (Vector2.Angle(facingSensor, dirToTarget) < angle/2)
-             {
-                 float distanceToTarget = Vector2.Distance(transform.position, targetPos.position);
-                 RaycastHit2D ray = Physics2D.Raycast(transform.position, dirToTarget, distanceToTarget);
-                 Debug.DrawRay(transform.position, dirToTarget * distanceToTarget, Color.red); 
-                 if (ray.collider != null)
-                 {
-                     targetInRange = true;   
-                 }
-                 else
-                 {
-                     targetInRange= false;
-                 }
-             }
-             else
-             {
-                 targetInRange= false;
-             }
-         }*/
-        Collider2D player = Physics2D.OverlapCircle(transform.position, radius, targetMask);
-
-        if (player != null)
+        if (targetCooldownTimer > 0f)
         {
-            targetPos = player.transform;
+           return;
+        }
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, targetMask);
+
+        if (hits.Length == 0)
+        {
+            targetPos = null;
+            return;
+        }
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit == null) {
+                continue;
+            } 
+
+            Transform target = hit.transform;
+
+            if (hit.CompareTag("dummy"))
+            {
+                if (targetPos == null || !targetPos.CompareTag("dummy"))
+                {
+                    StopMoving();
+                    targetPos = target;
+                    return;
+                }
+            }
+
+            if (targetPos == null)
+            {
+                targetPos = target;
+            }
+        }
+
+        if (targetPos != null)
+        {
             Vector2 dirToTarget = (targetPos.position - transform.position).normalized;
 
             if (Vector2.Angle(facingSensor, dirToTarget) < angle / 2)
             {
                 float distanceToTarget = Vector2.Distance(transform.position, targetPos.position);
                 RaycastHit2D ray = Physics2D.Raycast(transform.position, dirToTarget, distanceToTarget);
-                Debug.DrawRay(transform.position, dirToTarget * distanceToTarget, Color.red); // Always draw the ray
+                Debug.DrawRay(transform.position, dirToTarget * distanceToTarget, Color.red);
                 if (ray.collider != null)
                 {
                     targetInRange = true;
@@ -199,7 +181,6 @@ public class WeepingAngel : MonoBehaviour
     {
         if (sensorRoutine != null)
         {
-            targetPos = null;
             fov.SetFov(0, 0);
             StopCoroutine(sensorRoutine);
             sensorRoutine = null;
@@ -209,7 +190,6 @@ public class WeepingAngel : MonoBehaviour
     public void StopMoving()
     {
         isMoving = false;
-
         if (moveCoroutine != null)
         {
             StopCoroutine(moveCoroutine);

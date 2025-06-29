@@ -9,7 +9,7 @@ public class WanderState : EnemyState
     {
     }
 
-    public override void Collision()
+    public override void Collision(Collision2D collision)
     {
         //
     }

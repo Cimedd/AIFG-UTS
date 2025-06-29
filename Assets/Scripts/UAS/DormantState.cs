@@ -10,7 +10,7 @@ public class DormantState : EnemyState
 
     }
 
-    public override void Collision()
+    public override void Collision(Collision2D collision)
     {
         //
     }
@@ -18,7 +18,6 @@ public class DormantState : EnemyState
     public override void Enter()
     {
         angel.StopSennsor();
-        //Change Sprite
     }
 
     public override void Exit()
@@ -29,6 +28,5 @@ public class DormantState : EnemyState
     public override void Update()
     {
         
-        //Play Sound at Random Interval;
     }
 }

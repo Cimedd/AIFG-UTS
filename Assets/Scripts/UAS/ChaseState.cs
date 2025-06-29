@@ -9,9 +9,33 @@ public class ChaseState : EnemyState
     {
     }
 
-    public override void Collision()
+    public override void Collision(Collision2D collision)
     {
-        Stage2Manager.Instance.GameOver("The angel caught you");
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (angel.isFrozen)
+            {
+                angel.ChangeState(angel.dormantState);
+            }
+            else
+            {
+                Stage2Manager.Instance.GameOver("The angel caught you");
+            }
+
+        }
+
+        if (collision.gameObject.CompareTag("dummy"))
+        {
+            if (angel.targetPos != null && collision.transform == angel.targetPos)
+            {
+                angel.StopMoving();
+                angel.targetPos = null;
+                angel.targetInRange = false;
+                collision.gameObject.SetActive(false);
+                Object.Destroy(collision.gameObject, 0.5f);
+            }
+        }
+       
     }
 
     public override void Enter()
@@ -25,12 +49,21 @@ public class ChaseState : EnemyState
     {
         Debug.Log("Chase Out");
         angel.StopMoving();
+        angel.targetPos = null;
+        angel.targetCooldownTimer = angel.targetCooldownDuration;
     }
 
     public override void Update()
     {
+        if(angel.targetPos == null)
+        {
+            angel.ChangeState(angel.wanderState);
+            return; 
+        }
+
         if (!angel.isMoving && !angel.isFrozen)
         {
+      
             angel.GetPath(angel.currentPos.position, angel.targetPos.position);
             angel.StartMoving(angel.finalPath);
             angel.fov.setMaterial("Chase");
@@ -61,7 +94,13 @@ public class ChaseState : EnemyState
 
     private bool CheckFacing()
     {
+        if (angel.targetPos.CompareTag("dummy"))
+            return false;
+
         var target = angel.targetPos.GetComponent<Player>();
+        if (target == null)
+            return false;
+
         var playerDir = target.facingDirection;
         var angelDir = angel.facingDirection;
         return (playerDir == FacingDirection.Direction.Left && angelDir == FacingDirection.Direction.Right) ||
